@@ -1,8 +1,8 @@
 const fs = require('fs');
 const path = require('path');
 
-// const folderPath = '/Volumes/dav_damo/baiduyun/';
-const folderPath = './folder';
+const folderPath = '/Volumes/dav_damo/baiduyun/';
+// const folderPath = './folder';
 const outputFilePath = 'a.json';
 const delayInSeconds = 3; // 设置延迟的秒数
 function getFileStats(filePath) {
