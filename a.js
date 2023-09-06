@@ -31,7 +31,7 @@ async function readFilesInFolder(folderPath) {
         filesData.push(getFileStats(filePath));
       } else if (stats.isDirectory()) {
         filesData.push(...await readFilesInFolder(filePath));
-        console.log(`delay ${delayInSeconds}s for folderPath: ${file}`);
+        console.log(`delay ${delayInSeconds}s for folderPath: ${filePath}`);
         await delay(delayInSeconds * 1000); // 添加延迟
       }
     }
