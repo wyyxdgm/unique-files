@@ -1,0 +1,14 @@
+[
+  {
+    "path": "folder/a.txt",
+    "size": 3
+  },
+  {
+    "path": "folder/b.txt",
+    "size": 6
+  },
+  {
+    "path": "folder/fo2/a.txt",
+    "size": 3
+  }
+]

@@ -3,7 +3,6 @@ const path = require('path');
 
 const folderPath = './folder';
 const outputFilePath = 'a.json';
-
 function getFileStats(filePath) {
   const stats = fs.statSync(filePath);
   return {
@@ -15,15 +14,21 @@ function getFileStats(filePath) {
 function getAllFiles(folderPath) {
   const files = fs.readdirSync(folderPath);
 
-  const result = files.map(file => {
-    const filePath = path.resolve(folderPath, file);
-    if (fs.statSync(filePath).isFile()) {
-      return getFileStats(filePath);
+  let result = [];
+
+  files.forEach(file => {
+    const filePath = path.join(folderPath, file);
+    const stats = fs.statSync(filePath);
+    if (stats.isFile()) {
+      result.push(getFileStats(filePath));
+    } else if (stats.isDirectory()) {
+      result = result.concat(getAllFiles(filePath)); // 递归处理子文件夹
     }
   });
 
-  return result.filter(file => file !== undefined);
+  return result;
 }
+
 
 const filesData = getAllFiles(folderPath);
 fs.writeFileSync(outputFilePath, JSON.stringify(filesData, null, 2));
