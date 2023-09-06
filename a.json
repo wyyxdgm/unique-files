@@ -10,5 +10,13 @@
   {
     "path": "folder/fo2/a.txt",
     "size": 3
+  },
+  {
+    "path": "folder/fo2/fo21/a.txt",
+    "size": 3
+  },
+  {
+    "path": "folder/fo34/a.txt",
+    "size": 3
   }
 ]
