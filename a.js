@@ -23,6 +23,7 @@ async function readFilesInFolder(folderPath) {
     const filesData = [];
 
     for (const file of files) {
+      console.log('p=', file);
       const filePath = path.join(folderPath, file);
       const stats = await fs.promises.stat(filePath);
 
