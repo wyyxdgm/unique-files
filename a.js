@@ -5,7 +5,7 @@ const folderPath = '/Volumes/dav_damo/baiduyun/';
 // const folderPath = './folder';
 const outputFilePath = 'a.json';
 const deleteFilePath = 'd.json';
-const delayInSeconds = 2; // 设置延迟的秒数
+const delayInSeconds = 1; // 设置延迟的秒数
 function getFileStats(filePath) {
   const stats = fs.statSync(filePath);
   return {
