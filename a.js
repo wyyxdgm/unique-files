@@ -4,7 +4,8 @@ const path = require('path');
 const folderPath = '/Volumes/dav_damo/baiduyun/';
 // const folderPath = './folder';
 const outputFilePath = 'a.json';
-const delayInSeconds = 3; // 设置延迟的秒数
+const deleteFilePath = 'd.json';
+const delayInSeconds = 2; // 设置延迟的秒数
 function getFileStats(filePath) {
   const stats = fs.statSync(filePath);
   return {
@@ -17,7 +18,7 @@ function delay(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-async function readFilesInFolder(folderPath) {
+async function readFilesInFolder(folderPath, deleteList) {
   try {
     const files = await fs.promises.readdir(folderPath);
     const filesData = [];
@@ -30,9 +31,13 @@ async function readFilesInFolder(folderPath) {
       if (stats.isFile()) {
         filesData.push(getFileStats(filePath));
       } else if (stats.isDirectory()) {
-        filesData.push(...await readFilesInFolder(filePath));
-        console.log(`delay ${delayInSeconds}s for folderPath: ${filePath}`);
-        await delay(delayInSeconds * 1000); // 添加延迟
+        if (file.endsWith('.app') || file === 'node_modules') {
+          deleteList.push(filePath); // 将待删除目录添加到列表
+        } else {
+          filesData.push(...await readFilesInFolder(filePath, deleteList));
+          console.log(`delay ${delayInSeconds}s for folderPath: ${filePath}`);
+          await delay(delayInSeconds * 1000); // 添加延迟
+        }
       }
     }
 
@@ -41,11 +46,14 @@ async function readFilesInFolder(folderPath) {
     throw err;
   }
 }
-
-readFilesInFolder(folderPath)
+const deleteList = [];
+readFilesInFolder(folderPath, deleteList)
   .then(filesData => {
     fs.writeFileSync(outputFilePath, JSON.stringify(filesData, null, 2));
     console.log(`File data saved to ${outputFilePath}`);
+
+    fs.writeFileSync(deleteFilePath, JSON.stringify(deleteList, null, 2));
+    console.log(`Delete list saved to ${deleteFilePath}`);
   })
   .catch(err => {
     console.error(err);
