@@ -1,16 +1,29 @@
 const fs = require('fs');
 const path = require('path');
-
-const folderPath = '/Volumes/dav_damo/baiduyun/';
+let name = '我的资源';
+const folderPath = `/Volumes/dav_damo/baiduyun/${name}/`;
 // const folderPath = './folder';
-const outputFilePath = 'a.json';
-const deleteFilePath = 'd.json';
-const csvFilePath = 'a.csv';
-const delayInSeconds = 1.6; // 设置延迟的秒数
-
+const outputFilePath = `a-${name}.json`;
+const deleteFilePath = `d-${name}.json`;
+const csvFilePath = `a-${name}.csv`;
+function delIfExists(p) {
+  if (fs.existsSync(p)) fs.unlinkSync(p);
+}
+delIfExists(outputFilePath)
+delIfExists(deleteFilePath)
+delIfExists(csvFilePath)
+const delayInSeconds = 1.8; // 设置延迟的秒数
+fs.writeFileSync('pid.txt', `${process.pid}`)
 function getFileStats(filePath) {
-  const stats = fs.statSync(filePath);
-  return [filePath, stats.size];
+  try {
+    if (fs.existsSync(filePath)) {
+      const stats = fs.statSync(filePath);
+      return [filePath, stats.size];
+    }
+    return ['', ''];
+  } catch (error) {
+    return ['', ''];
+  }
 }
 
 function appendLineToCSV(arr) {
