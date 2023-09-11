@@ -1,6 +1,6 @@
 const fs = require('fs');
 const path = require('path');
-let name = '0-sightp.com';
+let name = 'slfdoc';
 const folderPath = `/Volumes/dav_damo/baiduyun/${name}/`;
 // const folderPath = './folder';
 const outputFilePath = `a-${name}.json`;
