@@ -1,12 +1,1 @@
-TypeError: number 0 is not iterable (cannot read property Symbol(Symbol.iterator))
-    at readFilesInFolder (/Users/damo/Downloads/unique-files/a.js:43:34)
-    at Object.<anonymous> (/Users/damo/Downloads/unique-files/a.js:76:1)
-    at Module._compile (node:internal/modules/cjs/loader:1105:14)
-    at Object.Module._extensions..js (node:internal/modules/cjs/loader:1159:10)
-    at Module.load (node:internal/modules/cjs/loader:981:32)
-    at Function.Module._load (node:internal/modules/cjs/loader:822:12)
-    at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:77:12)
-    at node:internal/main/run_main_module:17:47
-beforeExit
-File data saved to a-baiduyun.json
-Delete list saved to d-baiduyun.json
+delay for level= 0 10 s

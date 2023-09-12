@@ -1,7 +1,7 @@
 const fs = require("fs");
 const path = require("path");
 let name = "baiduyun";
-const folderPath = `/Volumes/dav_damo/${name}/`;
+const folderPath = `/Volumes/undefined/${name}/`;
 // const folderPath = './folder';
 const outputFilePath = `a-${name}.json`;
 const deleteFilePath = `d-${name}.json`;
