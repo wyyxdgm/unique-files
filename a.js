@@ -36,7 +36,7 @@ function delay(ms) {
 }
 
 async function readFilesInFolder(folderPath, deleteList) {
-  const stack = [folderPath, 0];
+  const stack = [[folderPath, 0]];
   const filesData = [];
 
   while (stack.length > 0) {
