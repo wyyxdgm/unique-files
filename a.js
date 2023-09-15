@@ -34,7 +34,10 @@ function appendLineToCSV(arr) {
 function delay(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
-
+function exclude(file) {
+  if (!file) return true;
+  return file.endsWith(".app") || file === "node_modules" || file === ".git" || file.endsWith(".photoslibrary");
+}
 async function readFilesInFolder(folderPath, deleteList) {
   const stack = [[folderPath, 0]];
   const filesData = [];
@@ -57,7 +60,7 @@ async function readFilesInFolder(folderPath, deleteList) {
         filesData.push(line);
         appendLineToCSV(line);
       } else if (stats.isDirectory()) {
-        if (file.endsWith(".app") || file === "node_modules" || file === ".git") {
+        if (exclude(file)) {
           deleteList.push(filePath); // 将待删除目录添加到列表
         } else {
           console.log(`delay ${delayInSeconds}s for folderPath: ${filePath}`);
