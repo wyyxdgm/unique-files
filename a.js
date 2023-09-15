@@ -58,21 +58,28 @@ async function readFilesInFolder(folderPath, deleteList) {
     for (const file of files) {
       const filePath = path.join(currentPath, file);
       console.log("p=", filePath);
-      const stats = await fs.promises.stat(filePath);
-
-      if (stats.isFile()) {
-        if (!filesData.length) appendLineToCSV(["filePath", "size"]);
-        let line = getFileStats(filePath);
-        filesData.push(line);
-        appendLineToCSV(line);
-      } else if (stats.isDirectory()) {
-        if (exclude(file)) {
-          deleteList.push(filePath); // 将待删除目录添加到列表
-        } else {
-          console.log(`delay ${delayInSeconds}s for folderPath: ${filePath}`);
-          await delay(delayInSeconds * 1000); // 添加延迟
-          stack.push([filePath, level + 1]);
+      if (fs.existsSync(filePath)) {
+        try {
+          const stats = await fs.promises.stat(filePath);
+          if (stats.isFile()) {
+            if (!filesData.length) appendLineToCSV(["filePath", "size"]);
+            let line = getFileStats(filePath);
+            filesData.push(line);
+            appendLineToCSV(line);
+          } else if (stats.isDirectory()) {
+            if (exclude(file)) {
+              deleteList.push(filePath); // 将待删除目录添加到列表
+            } else {
+              console.log(`delay ${delayInSeconds}s for folderPath: ${filePath}`);
+              await delay(delayInSeconds * 1000); // 添加延迟
+              stack.push([filePath, level + 1]);
+            }
+          }
+        } catch (error) {
+          console.log(error);
         }
+      } else {
+        console.log(`folderPath not exists: ${filePath}`);
       }
     }
   }
@@ -100,6 +107,7 @@ process.on("beforeExit", () => {
   console.log("beforeExit");
   if (!fs.existsSync(outputFilePath)) fs.writeFileSync(outputFilePath, JSON.stringify(filesData, null, 2));
   console.log(`File data saved to ${outputFilePath}`);
+
 
   if (!fs.existsSync(deleteFilePath)) fs.writeFileSync(deleteFilePath, JSON.stringify(deleteList, null, 2));
   console.log(`Delete list saved to ${deleteFilePath}`);
