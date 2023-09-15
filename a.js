@@ -12,7 +12,7 @@ function delIfExists(p) {
 delIfExists(outputFilePath);
 delIfExists(deleteFilePath);
 delIfExists(csvFilePath);
-const delayInSeconds = 1.8; // 设置延迟的秒数
+const delayInSeconds = 1; // 设置延迟的秒数
 fs.writeFileSync("pid.txt", `${process.pid}`);
 function getFileStats(filePath) {
   try {
