@@ -36,7 +36,13 @@ function delay(ms) {
 }
 function exclude(file) {
   if (!file) return true;
-  return file.endsWith(".app") || file === "node_modules" || file === ".git" || file.endsWith(".photoslibrary");
+  return (
+    file === "node_modules" ||
+    file === ".git" ||
+    file.startsWith(".") ||
+    file.endsWith(".app") ||
+    file.endsWith(".photoslibrary")
+  );
 }
 async function readFilesInFolder(folderPath, deleteList) {
   const stack = [[folderPath, 0]];
