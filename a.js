@@ -1,18 +1,21 @@
 const fs = require("fs");
 const path = require("path");
+const retry = require('./retry')
 let name = "baiduyun";
 const folderPath = `/Volumes/undefined/${name}/`;
 // const folderPath = './folder';
 const outputFilePath = `a-${name}.json`;
 const deleteFilePath = `d-${name}.json`;
 const csvFilePath = `a-${name}.csv`;
+const errJsonPath = `a-error.json`;
+const exps = [];
 function delIfExists(p) {
   if (fs.existsSync(p)) fs.unlinkSync(p);
 }
 delIfExists(outputFilePath);
 delIfExists(deleteFilePath);
 delIfExists(csvFilePath);
-const delayInSeconds = 1; // 设置延迟的秒数
+const delayInSeconds = .5; // 设置延迟的秒数
 fs.writeFileSync("pid.txt", `${process.pid}`);
 function getFileStats(filePath) {
   try {
@@ -53,14 +56,20 @@ async function readFilesInFolder(folderPath, deleteList) {
     let dd = Math.max(0, 5 - level) * 2000;
     console.log(`delay for level=`, level, dd / 1000, "s");
     await delay(dd);
-    const files = await fs.promises.readdir(currentPath);
+    const files = await retry(fs.promises.readdir(currentPath), 20, 5, (err) => {
+      exps.push(currentPath, err?.toString() || err)
+      return []
+    });
 
     for (const file of files) {
       const filePath = path.join(currentPath, file);
       console.log("p=", filePath);
-      if (fs.existsSync(filePath)) {
-        try {
-          const stats = await fs.promises.stat(filePath);
+      try {
+        if (fs.existsSync(filePath)) {
+          const stats = await retry(fs.promises.stat(filePath), 20, 5, (err) => {
+            exps.push(filePath, err?.toString() || err)
+            return []
+          });
           if (stats.isFile()) {
             if (!filesData.length) appendLineToCSV(["filePath", "size"]);
             let line = getFileStats(filePath);
@@ -75,11 +84,11 @@ async function readFilesInFolder(folderPath, deleteList) {
               stack.push([filePath, level + 1]);
             }
           }
-        } catch (error) {
-          console.log(error);
+        } else {
+          console.log(`folderPath not exists: ${filePath}`);
         }
-      } else {
-        console.log(`folderPath not exists: ${filePath}`);
+      } catch (error) {
+        console.log(error);
       }
     }
   }
@@ -108,7 +117,7 @@ process.on("beforeExit", () => {
   if (!fs.existsSync(outputFilePath)) fs.writeFileSync(outputFilePath, JSON.stringify(filesData, null, 2));
   console.log(`File data saved to ${outputFilePath}`);
 
-
+  fs.writeFileSync(errJsonPath, JSON.stringify(exps, null, 2));
   if (!fs.existsSync(deleteFilePath)) fs.writeFileSync(deleteFilePath, JSON.stringify(deleteList, null, 2));
   console.log(`Delete list saved to ${deleteFilePath}`);
 });
