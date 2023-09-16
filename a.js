@@ -53,10 +53,10 @@ async function readFilesInFolder(folderPath, deleteList) {
 
   while (stack.length > 0) {
     const [currentPath, level] = stack.pop();
-    let dd = Math.max(0, 5 - level) * 2000;
+    let dd = Math.max(0, 5 - level) * 1000;
     console.log(`delay for level=`, level, dd / 1000, "s");
     await delay(dd);
-    const files = await retry(fs.promises.readdir(currentPath), 20, 5, (err) => {
+    const files = await retry(() => fs.promises.readdir(currentPath), 20, 5, (err) => {
       exps.push(currentPath, err?.toString() || err)
       return []
     });
@@ -66,7 +66,7 @@ async function readFilesInFolder(folderPath, deleteList) {
       console.log("p=", filePath);
       try {
         if (fs.existsSync(filePath)) {
-          const stats = await retry(fs.promises.stat(filePath), 20, 5, (err) => {
+          const stats = await retry(() => fs.promises.stat(filePath), 20, 5, (err) => {
             exps.push(filePath, err?.toString() || err)
             return []
           });
