@@ -51,27 +51,30 @@ function exclude(file) {
 async function readFilesInFolder(folderPath, deleteList) {
   const stack = [[folderPath, 0]];
   const filesData = [];
-
   while (stack.length > 0) {
-    const [currentPath, level] = stack.pop();
-    let dd = Math.max(0, 5 - level) * 1000;
-    console.log(`delay for level=`, level, dd / 1000, "s");
-    await delay(dd);
-    const files = await retry(async () => await fs.promises.readdir(currentPath), 20, 5, (err) => {
-      exps.push(currentPath, err && err.toString() || err)
-      return []
-    });
+    try {
+      const [currentPath, level] = stack.pop();
+      let dd = Math.max(0, 5 - level) * 1000;
+      // console.log(`delay for level=`, level, dd / 1000, "s");
+      // await delay(dd);
+      const files = await retry(async () => await fs.promises.readdir(currentPath), 20, 5, (err) => {
+        exps.push(currentPath, err && err.toString() || err)
+        return []
+      });
+      console.log('currentPath', currentPath, 'files', files);
 
-    for (const file of files) {
-      const filePath = path.join(currentPath, file);
-      console.log("p=", filePath);
-      try {
+      for (const file of files) {
+        const filePath = path.join(currentPath, file);
+        console.log("p=", filePath);
         if (fs.existsSync(filePath)) {
           const stats = await retry(async () => await fs.promises.stat(filePath), 20, 5, (err) => {
             exps.push(filePath, err && err.toString() || err)
             return null;
           });
-          if (!stats) continue;
+          if (!stats) {
+            console.log('!stats', filePath);
+            continue;
+          }
           if (stats.isFile()) {
             if (!filesData.length) appendLineToCSV(["filePath", "size"]);
             let line = getFileStats(filePath);
@@ -89,9 +92,10 @@ async function readFilesInFolder(folderPath, deleteList) {
         } else {
           console.log(`folderPath not exists: ${filePath}`);
         }
-      } catch (error) {
-        console.log(error);
+
       }
+    } catch (error) {
+      console.log(error);
     }
   }
 
