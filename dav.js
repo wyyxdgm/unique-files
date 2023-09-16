@@ -32,7 +32,7 @@ delIfExists(errJsonPath);
 
 const delayInSeconds = .5; // 设置延迟的秒数
 fs.writeFileSync("pid.txt", `${process.pid}`);
-const KEYS = ["filename", "size", "etag", "mime", "lastmod", "filePath"];
+const KEYS = ["basename", "size", "etag", "mime", "lastmod", "filename"];
 function getFileStats(fileObj) {
   try {
     let res = [];
@@ -83,10 +83,10 @@ async function readFilesInFolder(folderPath, deleteList) {
         return [];
       });
 
-      console.log('currentPath', currentPath, 'files', files.map(f => f.filename).join('|'));
+      console.log('currentPath', currentPath, 'files', files.map(f => f.basename).join('|'));
 
-      for (const file of files) {
-        const filePath = path.join(currentPath, file.filename);
+      for (const file of files.slice(1)) {
+        const filePath = path.join(currentPath, file.basename);
         console.log("p=", filePath);
 
         if (file.type === "file") {
@@ -95,7 +95,7 @@ async function readFilesInFolder(folderPath, deleteList) {
           filesData.push(line);
           appendLineToCSV(line);
         } else if (file.type === "directory") {
-          if (exclude(file.filename)) {
+          if (exclude(file.basename)) {
             deleteList.push(filePath); // 将待删除目录添加到列表
           } else {
             console.log(`delay ${delayInSeconds}s for folderPath: ${filePath}`);
