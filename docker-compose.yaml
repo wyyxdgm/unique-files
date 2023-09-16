@@ -1,0 +1,9 @@
+services:
+   alist:
+     image: xhofe/alist:latest
+     container_name: alist
+     ports:
+       - 5109:5244
+     volumes:
+       - /Users/damo/Downloads/baidufiles/alist:/opt/alist/data
+     restart: always
