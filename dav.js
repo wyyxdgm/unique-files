@@ -12,7 +12,7 @@ const webdavUrl = "http://192.168.3.100:5240/dav";
 const client = createClient(webdavUrl, {
   username,
   password,
-  remoteBasePath
+  remoteBasePath: '../dav/baiduyun'
 });
 
 const folderPath = `/${name}`;
@@ -32,7 +32,7 @@ delIfExists(errJsonPath);
 
 const delayInSeconds = .5; // 设置延迟的秒数
 fs.writeFileSync("pid.txt", `${process.pid}`);
-const KEYS = ["basename", "size", "etag", "mime", "lastmod", "filePath"];
+const KEYS = ["filename", "size", "etag", "mime", "lastmod", "filePath"];
 function getFileStats(fileObj) {
   try {
     let res = [];
@@ -75,6 +75,7 @@ async function readFilesInFolder(folderPath, deleteList) {
 
       // await delay(dd);
       const files = await retry(async () => {
+        console.log('list dir', currentPath);
         const directoryItems = await client.getDirectoryContents(currentPath);
         return directoryItems;
       }, 20, 5, (err) => {
@@ -82,10 +83,10 @@ async function readFilesInFolder(folderPath, deleteList) {
         return [];
       });
 
-      console.log('currentPath', currentPath, 'files', files.map(f => f.basename).join('|'));
+      console.log('currentPath', currentPath, 'files', files.map(f => f.filename).join('|'));
 
       for (const file of files) {
-        const filePath = path.join(currentPath, file.basename);
+        const filePath = path.join(currentPath, file.filename);
         console.log("p=", filePath);
 
         if (file.type === "file") {
@@ -94,7 +95,7 @@ async function readFilesInFolder(folderPath, deleteList) {
           filesData.push(line);
           appendLineToCSV(line);
         } else if (file.type === "directory") {
-          if (exclude(file.basename)) {
+          if (exclude(file.filename)) {
             deleteList.push(filePath); // 将待删除目录添加到列表
           } else {
             console.log(`delay ${delayInSeconds}s for folderPath: ${filePath}`);
