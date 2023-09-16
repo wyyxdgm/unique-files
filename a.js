@@ -8,7 +8,6 @@ const outputFilePath = `a-${name}.json`;
 const deleteFilePath = `d-${name}.json`;
 const csvFilePath = `a-${name}.csv`;
 const errJsonPath = `a-error.json`;
-const alog = `a.log`;
 const exps = [];
 function delIfExists(p) {
   if (fs.existsSync(p)) fs.unlinkSync(p);
@@ -17,7 +16,6 @@ delIfExists(outputFilePath);
 delIfExists(deleteFilePath);
 delIfExists(csvFilePath);
 delIfExists(errJsonPath);
-delIfExists(alog);
 const delayInSeconds = .5; // 设置延迟的秒数
 fs.writeFileSync("pid.txt", `${process.pid}`);
 function getFileStats(filePath) {
