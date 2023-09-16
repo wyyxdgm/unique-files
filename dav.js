@@ -36,7 +36,7 @@ const KEYS = ["filename", "size", "etag", "mime", "lastmod", "filePath"];
 function getFileStats(fileObj) {
   try {
     let res = [];
-    for (let key of keys) {
+    for (let key of KEYS) {
       res.push(fileObj[key] || '');
     }
     return res;
