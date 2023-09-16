@@ -1,7 +1,7 @@
 const fs = require('fs');
 
-const inputFilePath = 'a.json';
-const outputFilePath = 'b.json';
+const inputFilePath = './storage/a.json';
+const outputFilePath = './storage/b.json';
 
 function getDuplicateFiles(fileData) {
   const duplicates = {};

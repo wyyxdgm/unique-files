@@ -1,7 +1,7 @@
 const fs = require('fs');
 
-const inputFilePath = 'b.json';
-const outputFilePath = 'c.json';
+const inputFilePath = './storage/b.json';
+const outputFilePath = './storage/c.json';
 
 function removeFirstItemFromArray(arr) {
   return arr.slice(1);

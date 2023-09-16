@@ -16,10 +16,10 @@ const client = createClient(webdavUrl, {
 });
 
 const folderPath = `/${name}`;
-const outputFilePath = `a-${name}.json`;
-const deleteFilePath = `d-${name}.json`;
-const csvFilePath = `a-${name}.csv`;
-const errJsonPath = `a-error.json`;
+const outputFilePath = `./storage/a-${name}.json`;
+const deleteFilePath = `./storage/d-${name}.json`;
+const csvFilePath = `./storage/a-${name}.csv`;
+const errJsonPath = `./storage/a-error.json`;
 const exps = [];
 function delIfExists(p) {
   if (fs.existsSync(p)) fs.unlinkSync(p);
