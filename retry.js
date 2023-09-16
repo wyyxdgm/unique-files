@@ -21,4 +21,4 @@ function retry(promiseFn, retryCount, retryIntervalSeconds, errorCallback) {
     executePromiseFn(0);
   });
 }
-module.exports = retry;
+export { retry };
