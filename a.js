@@ -1,14 +1,13 @@
-const fs = require("fs");
-const path = require("path");
-const retry = require('./retry')
+import fs from "fs";
+import path from "path";
+import { retry } from './retry.js';
 let name = "baiduyun"; // 本次任务标识
-const folderPath = `/Volumes/undefined/${name}/`; // 本地磁盘目录
-// const folderPath = './folder';
-const outputFilePath = `./storage/a-${name}.json`; // json文件输出地址
-const deleteFilePath = `./storage/d-${name}.json`; // 重复列表
-const csvFilePath = `./storage/a-${name}.csv`;// csv输出文件地址
-const errJsonPath = `./storage/a-error.json`; // 存储异常日志
-const pidfile = `"./storage/pid-${name}.txt"`; // 存储pid
+const folderPath = path.join(__dirame, `/Volumes/undefined/${name}/`); // 本地磁盘目录
+const outputFilePath = path.join(__dirame, `./storage/a-${name}.json`); // json文件输出地址
+const deleteFilePath = path.join(__dirame, `./storage/d-${name}.json`); // 重复列表
+const csvFilePath = path.join(__dirame, `./storage/a-${name}.csv`);// csv输出文件地址
+const errJsonPath = path.join(__dirame, `./storage/a-error.json`); // 存储异常日志
+const pidfile = path.join(__dirame, `./storage/pid-${name}.txt`); // 存储pid
 const exps = []; // 存储异常数据
 /**
  * 是否过滤某个文件或文件夹

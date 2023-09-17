@@ -1,7 +1,8 @@
-const fs = require('fs');
+import fs from "fs";
+import path from "path";
 
-const inputFilePath = './storage/a.json';
-const outputFilePath = './storage/b.json';
+const inputFilePath = path.join(__dirname, './storage/a.json');
+const outputFilePath = path.join(__dirname, './storage/b.json');
 
 function getDuplicateFiles(fileData) {
   const duplicates = {};

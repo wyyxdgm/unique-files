@@ -1,7 +1,7 @@
-const fs = require('fs');
+import fs from "fs";
 
-const inputFilePath = './storage/b.json';
-const outputFilePath = './storage/c.json';
+const inputFilePath = path.join(__dirname, './storage/b.json');
+const outputFilePath = path.join(__dirname, './storage/c.json');
 
 function removeFirstItemFromArray(arr) {
   return arr.slice(1);

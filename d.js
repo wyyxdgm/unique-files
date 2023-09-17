@@ -1,7 +1,7 @@
-const fs = require('fs');
+import fs from "fs";
 
-const inputFilePath = './storage/c.json';
-const deleteFilePath = './storage/d.json';
+const inputFilePath = path.join(__dirnmae, './storage/c.json');
+const deleteFilePath = path.join(__dirnmae, './storage/d.json');
 
 
 const filesToRemove = JSON.parse(fs.readFileSync(inputFilePath, 'utf8')).flat();

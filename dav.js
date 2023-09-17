@@ -15,11 +15,11 @@ let folderPath = "baiduyun"; // dav列表中的目标目录
 const name = `${folderPath}`; // 日志输出标识
 let remoteBasePath = '../dav/${folderPath}';
 
-const outputFilePath = `./storage/a-${name}.json`; // json文件输出地址
-const deleteFilePath = `./storage/d-${name}.json`; // 排除的文件或文件夹列表
-const csvFilePath = `./storage/a-${name}.csv`; // csv文件输出地址
-const errJsonPath = `./storage/a-${name}-error.json`; // 存储异常日志
-const pidfile = `"./storage/pid-${name}.txt"`; // 存储pid
+const outputFilePath = path.join(__dirname, `./storage/a-${name}.json`); // json文件输出地址
+const deleteFilePath = path.join(__dirname, `./storage/d-${name}.json`); // 排除的文件或文件夹列表
+const csvFilePath = path.join(__dirname, `./storage/a-${name}.csv`); // csv文件输出地址
+const errJsonPath = path.join(__dirname, `./storage/a-${name}-error.json`); // 存储异常日志
+const pidfile = path.join(__dirname, `./storage/pid-${name}.txt`); // 存储pid
 const exps = []; // 存储异常数据
 
 const delayInSeconds = .5; // 设置延迟的秒数
