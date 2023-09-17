@@ -11,8 +11,8 @@ const retry = require('./retry.js').retry;
 const webdavUrl = "http://192.168.3.100:5240/dav"; // dav 地址
 const username = "admin"; // 用户名
 const password = "12345"; // 密码
-let folderPath = "ftp"; // dav列表中的目标目录
-const name = `${folderPath}`; // 日志输出标识
+let folderPath = "baiduyun"; // dav列表中的目标目录
+const name = `baiduyun-all`; // 日志输出标识
 let remoteBasePath = `../dav/`;
 
 const outputFilePath = path.join(__dirname, `./storage/a-${name}.json`); // json文件输出地址
@@ -22,7 +22,7 @@ const errJsonPath = path.join(__dirname, `./storage/a-${name}-error.json`); // �
 const pidfile = path.join(__dirname, `./storage/pid-${name}.txt`); // 存储pid
 const exps = []; // 存储异常数据
 
-const delayInSeconds = .5; // 设置延迟的秒数
+const delayInSeconds = .2; // 设置延迟的秒数
 const KEYS = ["basename", "size", "etag", "mime", "lastmod", "filename"]; // csv文件信息收集列（可选其中任意列删除）
 
 const deleteList = []; // 存储运行时本地忽略的文件或文件夹列表
@@ -77,7 +77,6 @@ function delay(ms) {
 
 async function readFilesInFolder(folderPath, deleteList) {
   const stack = [[folderPath, 0]];
-  const filesData = [];
   while (stack.length > 0) {
     try {
       const [currentPath, level] = stack.pop();
@@ -88,14 +87,14 @@ async function readFilesInFolder(folderPath, deleteList) {
         console.log('list dir', currentPath);
         const directoryItems = await client.getDirectoryContents(currentPath);
         return directoryItems;
-      }, 20, 5, (err) => {
+      }, 2, 5, (err) => {
         exps.push(currentPath, err && err.toString() || err);
         return [];
       });
 
       console.log('currentPath', currentPath, 'files', files.map(f => f.basename).join('|'));
 
-      for (const file of files.slice(1)) {
+      for (const file of files) {
         const filePath = path.join(currentPath, file.basename);
         console.log("p=", filePath);
 
@@ -132,8 +131,6 @@ fs.writeFileSync(pidfile, `${process.pid}`);
 
 readFilesInFolder(folderPath, deleteList)
   .then((result) => {
-    filesData.push(...result);
-
     fs.writeFileSync(outputFilePath, JSON.stringify(filesData, null, 2));
     console.log(`File data saved to ${outputFilePath}`);
 
