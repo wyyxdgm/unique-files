@@ -3,6 +3,7 @@
     "dav": "node dav.js > dav.log 2>&1"
   },
   "devDependencies": {
+    "csv-parser": "^3.0.0",
     "ts-node": "^10.9.1",
     "webdav": "4.11.3"
   }
