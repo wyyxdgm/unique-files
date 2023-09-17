@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "dav": "node -r ts-node/register dav.js > a.log 2>&1"
+    "dav": "node dav.js > dav.log 2>&1"
   },
   "devDependencies": {
     "ts-node": "^10.9.1",

@@ -7,12 +7,13 @@ const path = require("path");
 const createClient = require("webdav").createClient;
 const retry = require('./retry.js').retry;
 // 参数
-const webdavUrl = "http://localhost:5240/dav"; // dav 地址
+// const webdavUrl = "http://localhost:5240/dav"; // dav 地址
+const webdavUrl = "http://192.168.3.100:5240/dav"; // dav 地址
 const username = "admin"; // 用户名
 const password = "12345"; // 密码
-let folderPath = "baiduyun"; // dav列表中的目标目录
+let folderPath = "ftp"; // dav列表中的目标目录
 const name = `${folderPath}`; // 日志输出标识
-let remoteBasePath = '../dav/${folderPath}';
+let remoteBasePath = `../dav/`;
 
 const outputFilePath = path.join(__dirname, `./storage/a-${name}.json`); // json文件输出地址
 const deleteFilePath = path.join(__dirname, `./storage/d-${name}.json`); // 排除的文件或文件夹列表
