@@ -1,14 +1,31 @@
 const fs = require("fs");
 const path = require("path");
 const retry = require('./retry')
-let name = "baiduyun";
-const folderPath = `/Volumes/undefined/${name}/`;
+let name = "baiduyun"; // 本次任务标识
+const folderPath = `/Volumes/undefined/${name}/`; // 本地磁盘目录
 // const folderPath = './folder';
-const outputFilePath = `./storage/a-${name}.json`;
-const deleteFilePath = `./storage/d-${name}.json`;
-const csvFilePath = `./storage/a-${name}.csv`;
-const errJsonPath = `./storage/a-error.json`;
-const exps = [];
+const outputFilePath = `./storage/a-${name}.json`; // json文件输出地址
+const deleteFilePath = `./storage/d-${name}.json`; // 重复列表
+const csvFilePath = `./storage/a-${name}.csv`;// csv输出文件地址
+const errJsonPath = `./storage/a-error.json`; // 存储异常日志
+const pidfile = `"./storage/pid-${name}.txt"`; // 存储pid
+const exps = []; // 存储异常数据
+/**
+ * 是否过滤某个文件或文件夹
+ * @param {*} file 文件名
+ * @returns 是否过滤
+ */
+function exclude(file) {
+  if (!file) return true;
+  return (
+    file === "node_modules" ||
+    file === ".git" ||
+    file.startsWith(".") ||
+    file.endsWith(".app") ||
+    file.endsWith(".photoslibrary")
+  );
+}
+
 function delIfExists(p) {
   if (fs.existsSync(p)) fs.unlinkSync(p);
 }
@@ -17,7 +34,7 @@ delIfExists(deleteFilePath);
 delIfExists(csvFilePath);
 delIfExists(errJsonPath);
 const delayInSeconds = .5; // 设置延迟的秒数
-fs.writeFileSync("pid.txt", `${process.pid}`);
+fs.writeFileSync(pidfile, `${process.pid}`);
 function getFileStats(filePath) {
   try {
     if (fs.existsSync(filePath)) {
@@ -38,16 +55,7 @@ function appendLineToCSV(arr) {
 function delay(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
-function exclude(file) {
-  if (!file) return true;
-  return (
-    file === "node_modules" ||
-    file === ".git" ||
-    file.startsWith(".") ||
-    file.endsWith(".app") ||
-    file.endsWith(".photoslibrary")
-  );
-}
+
 async function readFilesInFolder(folderPath, deleteList) {
   const stack = [[folderPath, 0]];
   const filesData = [];

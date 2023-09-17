@@ -1,38 +1,59 @@
+
+/**
+ * 列出dav的所有文件信息到csv中
+ */
 import fs from "fs";
 import path from "path";
-import axios from "axios";
 import { createClient } from "webdav";
 import { retry } from './retry.js';
 
-const username = "admin";
-const password = "12345";
-let name = "baiduyun";
-let remoteBasePath = '/baiduyun';
-const webdavUrl = "http://localhost:5240/dav";
+// 参数
+const webdavUrl = "http://localhost:5240/dav"; // dav 地址
+const username = "admin"; // 用户名
+const password = "12345"; // 密码
+let folderPath = "baiduyun"; // dav列表中的目标目录
+const name = `${folderPath}`; // 日志输出标识
+let remoteBasePath = '../dav/${folderPath}';
+
+const outputFilePath = `./storage/a-${name}.json`; // json文件输出地址
+const deleteFilePath = `./storage/d-${name}.json`; // 排除的文件或文件夹列表
+const csvFilePath = `./storage/a-${name}.csv`; // csv文件输出地址
+const errJsonPath = `./storage/a-${name}-error.json`; // 存储异常日志
+const pidfile = `"./storage/pid-${name}.txt"`; // 存储pid
+const exps = []; // 存储异常数据
+
+const delayInSeconds = .5; // 设置延迟的秒数
+const KEYS = ["basename", "size", "etag", "mime", "lastmod", "filename"]; // csv文件信息收集列（可选其中任意列删除）
+
+const deleteList = []; // 存储运行时本地忽略的文件或文件夹列表
+const filesData = []; // 存储运行时文件列表
+
 const client = createClient(webdavUrl, {
   username,
   password,
-  remoteBasePath: '../dav/baiduyun'
+  remoteBasePath
 });
 
-const folderPath = `/${name}`;
-const outputFilePath = `./storage/a-${name}.json`;
-const deleteFilePath = `./storage/d-${name}.json`;
-const csvFilePath = `./storage/a-${name}.csv`;
-const errJsonPath = `./storage/a-error.json`;
-const exps = [];
+/**
+ * 是否过滤某个文件或文件夹
+ * @param {*} file 文件名
+ * @returns 是否过滤
+ */
+function exclude(file) {
+  if (!file) return true;
+  return (
+    file === "node_modules" ||
+    file === ".git" ||
+    file.startsWith(".") ||
+    file.endsWith(".app") ||
+    file.endsWith(".photoslibrary")
+  );
+}
+
 function delIfExists(p) {
   if (fs.existsSync(p)) fs.unlinkSync(p);
 }
 
-delIfExists(outputFilePath);
-delIfExists(deleteFilePath);
-delIfExists(csvFilePath);
-delIfExists(errJsonPath);
-
-const delayInSeconds = .5; // 设置延迟的秒数
-fs.writeFileSync("pid.txt", `${process.pid}`);
-const KEYS = ["basename", "size", "etag", "mime", "lastmod", "filename"];
 function getFileStats(fileObj) {
   try {
     let res = [];
@@ -52,17 +73,6 @@ function appendLineToCSV(arr) {
 
 function delay(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
-function exclude(file) {
-  if (!file) return true;
-  return (
-    file === "node_modules" ||
-    file === ".git" ||
-    file.startsWith(".") ||
-    file.endsWith(".app") ||
-    file.endsWith(".photoslibrary")
-  );
 }
 
 async function readFilesInFolder(folderPath, deleteList) {
@@ -113,8 +123,12 @@ async function readFilesInFolder(folderPath, deleteList) {
   return filesData;
 }
 
-const deleteList = [];
-const filesData = [];
+delIfExists(outputFilePath);
+delIfExists(deleteFilePath);
+delIfExists(csvFilePath);
+delIfExists(errJsonPath);
+
+fs.writeFileSync(pidfile, `${process.pid}`);
 
 readFilesInFolder(folderPath, deleteList)
   .then((result) => {
