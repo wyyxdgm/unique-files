@@ -49,6 +49,15 @@
     {
       "type": "node",
       "request": "launch",
+      "name": "test/dav",
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
+      "program": "${workspaceFolder}/test/dav.js"
+    },
+    {
+      "type": "node",
+      "request": "launch",
       "name": "a",
       "skipFiles": [
         "<node_internals>/**"

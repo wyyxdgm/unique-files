@@ -1,8 +1,8 @@
 
-const webdavUrl = "http://192.168.3.100:5240/dav";
+const webdavUrl = "http://localhost:5240/dav";
 const username = "admin";
 const password = "12345";
-import { AuthType, createClient } from "webdav";
+const createClient = require("webdav").createClient;
 
 const client = createClient(webdavUrl, {
   username,
@@ -10,7 +10,6 @@ const client = createClient(webdavUrl, {
   remoteBasePath: '/baiduyun'
 });
 (async () => {
-  const directoryItems = await client.getDirectoryContents("/baiduyun/我的资源");
+  const directoryItems = await client.getDirectoryContents("/baiduyun/来自：iPhone");
   console.log(directoryItems);
-
 })();

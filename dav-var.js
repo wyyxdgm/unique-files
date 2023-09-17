@@ -2,7 +2,7 @@ const fs = require('fs');
 const csv = require('csv-parser');
 const path = require('path');
 
-const name = 'baiduyun';
+const name = 'baiduyun-all';
 const csvFilePath = path.join(__dirname, `./storage/a-${name}.csv`);
 const filteredFilePath = path.join(__dirname, `./storage/dav-filtered.csv`);
 const separator = '##';
