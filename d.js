@@ -1,10 +1,11 @@
-import fs from "fs";
-
-const inputFilePath = path.join(__dirnmae, './storage/c.json');
-const deleteFilePath = path.join(__dirnmae, './storage/d.json');
+const fs = require("fs");
+const path = require("path");
+const inputFilePath = path.join(__dirname, './storage/c.json');
+const deleteFilePath = path.join(__dirname, './storage/d.json');
 
 
 const filesToRemove = JSON.parse(fs.readFileSync(inputFilePath, 'utf8')).flat();
+console.log(filesToRemove);
 filesToRemove.forEach(filePath => {
   fs.unlinkSync(filePath);
 });

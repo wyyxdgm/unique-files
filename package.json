@@ -4,7 +4,6 @@
   },
   "devDependencies": {
     "ts-node": "^10.9.1",
-    "webdav": "^5.3.0"
-  },
-  "type": "module"
+    "webdav": "4.11.3"
+  }
 }

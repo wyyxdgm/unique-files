@@ -2,11 +2,10 @@
 /**
  * 列出dav的所有文件信息到csv中
  */
-import fs from "fs";
-import path from "path";
-import { createClient } from "webdav";
-import { retry } from './retry.js';
-
+const fs = require("fs");
+const path = require("path");
+const createClient = require("webdav").createClient;
+const retry = require('./retry.js').retry;
 // 参数
 const webdavUrl = "http://localhost:5240/dav"; // dav 地址
 const username = "admin"; // 用户名
