@@ -5,6 +5,8 @@ const path = require('path');
 const name = 'baiduyun-all';
 const csvFilePath = path.join(__dirname, `./storage/a-${name}.csv`);
 const filteredFilePath = path.join(__dirname, `./storage/dav-filtered.csv`);
+const filteredJsonFilePath = path.join(__dirname, `./storage/dav-filtered.json`);
+const duplicateJsonFilePath = path.join(__dirname, `./storage/dav-duplicate.json`);
 const separator = '##';
 
 const KEYS = ["basename", "size", "etag", "mime", "lastmod", "filename"]; // csv文件信息收集列（可选其中任意列删除）
@@ -65,12 +67,32 @@ function processRowString(rowstring) {
   }
   return Object.values(obj).join(separator); // Return the modified row
 }
+function processRowStringObj(rowstring) {
+  // TODO: Implement your custom filtering logic here
+  // Modify the row as per your requirements
+  let res = regexp.exec(rowstring);
+  if (!res) {
+    debugger
+  }
+  let obj = {};
+  KEYS.forEach((key, i) => {
+    obj[key] = res[i + 1]
+    if (obj[key].indexOf(separator) > -1) console.error('err-----------------', obj[key], rowstring)
+  });
+  if (!obj.basename || !obj.filename) {
+    debugger
+  }
+  return [Object.values(obj).join(separator), obj]; // Return the modified row
+}
 
 
 module.exports = {
   name,
   csvFilePath,
   filteredFilePath,
+  filteredJsonFilePath,
+  duplicateJsonFilePath,
+  processRowStringObj,
   separator,
   KEYS,
   title,
